@@ -10,6 +10,7 @@
     "seed": "node src/prisma/seed.js",
     "migrate": "npx prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "prisma generate",
     "postinstall": "prisma generate"
   },
   "repository": {
