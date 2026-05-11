@@ -10,7 +10,7 @@ router.use(authenticateToken)
 router.get('/', async (req, res) => {
   try {
     const vehicles = await prisma.vehicle.findMany({
-      where: { is_active: true },
+      where: {},
       select: {
         id: true,
         vehicle_id: true,
