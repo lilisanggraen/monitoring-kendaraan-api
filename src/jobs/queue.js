@@ -1,14 +1,23 @@
 import { Queue } from 'bullmq'
+import { URL } from 'url'
 
-// Konfigurasi koneksi Redis
-export const redisConnection = {
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || 6379,
+const getRedisConnection = () => {
+  if (process.env.REDIS_URL) {
+    const url = new URL(process.env.REDIS_URL)
+    return {
+      host: url.hostname,
+      port: Number(url.port) || 6379,
+      password: url.password || undefined,
+    }
+  }
+  return {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: Number(process.env.REDIS_PORT) || 6379,
+  }
 }
 
-// Buat GPS processing queue
-export const gpsQueue = new Queue('gpsQueue', {
-  connection: redisConnection
-})
+export const redisConnection = getRedisConnection()
 
-console.log('📦 BullMQ Queue "gpsQueue" siap.')
+export const gpsQueue = new Queue('gpsQueue', { connection: redisConnection })
+
+console.log('📦 BullMQ Queue "gpsQueue" siap, host:', redisConnection.host)
