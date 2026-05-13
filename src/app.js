@@ -32,6 +32,14 @@ app.use('/api/telemetry', telemetryRoutes);
 app.use('/api/geofences', geofenceRoutes);
 app.use('/api/notifications', notificationRoutes);
 
+// Keep-alive ping setiap 10 menit agar server tidak tidur
+setInterval(async () => {
+  try {
+    const http = await import('http')
+    http.get(`http://localhost:${process.env.PORT || 3000}/api/health`)
+    console.log('Keep-alive ping sent')
+  } catch (e) {}
+}, 10 * 60 * 1000)
 // ─── Health Check ─────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({
